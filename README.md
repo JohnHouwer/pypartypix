@@ -15,7 +15,7 @@ This was meant as a poc to demonstrate that client for such an app is not necess
 
 The option --help displays a help.
 
-LICESNE:
+LICENSE:
 MIT
 
 CREDITS:
