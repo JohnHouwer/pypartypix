@@ -1,0 +1,149 @@
+<!doctype html>
+<head>
+  <link rel="stylesheet" type="text/css" href="vegas/vegas.css"/>
+  <script src="jquery-latest.min.js"></script>
+  <script src="vegas/vegas.js"></script>
+  <style type="text/css">
+	body {
+	    overflow:hidden;
+	}
+        #settings-1 {
+        	color: black;
+        	position: fixed;
+        	bottom: 20;
+        	background-color: white;
+        	border-radius: 5px;
+        	align-content: center;
+        	align-items: center;
+        	text-align: left;
+        	opacity: 0;
+        	position: fixed;
+        	top: 5px;
+        	left: 2px;
+        	padding-left: 5px;
+        	padding-right: 5px;
+        	padding-top: 5px;
+        	padding-bottom: 5px;
+        }
+        #settings-1:hover{
+		transition-duration: 3s;
+        	opacity: 1;
+        }
+  </style>
+
+  <script>
+slides = [];
+rawfiles = [];
+filename = "index.txt";
+
+function addSlide(data){
+	 var lines = data.split("\n"); 
+	 if (typeof vegas != "undefined"){
+		 currentSlide = vegas.vegas("current");
+	 }
+	 else {
+		 currentSlide = 0;
+	 }
+	 var inserted = 0
+	 $.each(lines, function (i, line){
+		 if (line != ""){
+			 if (line.toLowerCase().endsWith(".mp4")){
+				 slide = {video: {"src": line, "loop": false}};}
+				 else {
+					slide = {"src": line, cover: false, color: "black"};
+				 }
+			 if (rawfiles.indexOf(line) === -1){
+				 slides.splice(currentSlide + 1 + inserted, 0, slide);
+				 rawfiles.push(line);
+				 inserted += 1;
+				 console.log("slide added", slide, slides)
+			 }
+		 }
+	 });
+}
+
+function reloadSlides(){
+	$.get(filename, function (data){addSlide(data);}, {}, "text");
+	if (typeof vegas != "undefined"){
+		if (slides.length > 1){
+			vegas.vegas("options", "slides", slides);
+			if (!vegas.vegas("playing")){
+				vegas.vegas("play");
+			}
+		}
+	}else{
+		if (slides.length > 0){
+			vegas = $("body").vegas({slides: slides});
+		}
+
+	}
+}
+
+$( document ).ready(function (){
+	reloadSlides();
+	setInterval(reloadSlides, 2000); 
+	var settings = $("#settings-1");
+	$("#apply").on("click", function(){
+		vegas.vegas("options", "delay", $("#delay").val());
+		vegas.vegas("options", "transitionDuration", $("#tduration").val());
+		vegas.vegas("options", "animationDuration", $("#aduration").val());
+		if ($("#timer").is(":checked")){
+			$(".vegas-timer-progress").css("opacity", "1");
+		}else {
+			$(".vegas-timer-progress").css("opacity", "0");
+		}
+		transitions = $( "#transitions :checked" ).map(function () {
+			return this.value;
+		}).get()
+		console.log(transitions);
+		if (typeof transitions !== "undefined"){
+			vegas.vegas("options", "transition", transitions);
+		}
+		animations = $( "#animations :checked" ).map(function () {
+			return this.value;
+		}).get()
+		console.log(animations);
+		if (typeof animations !== "undefined"){
+			vegas.vegas("options", "animation", animations);
+		}
+	});
+	$("#prev").on("click", function(){
+		vegas.vegas("previous");
+	})
+	$("#next").on("click", function(){
+		vegas.vegas("next");
+	})
+        var transitions = ["fade", "fade2", "slideLeft", "slideLeft2", "slideRight", "slideRight2", "slideUp", "slideUp2", "slideDown", "slideDown2", "zoomIn", "zoomIn2", "zoomOut", "zoomOut2", "swirlLeft", "swirlLeft2", "swirlRight", "swirlRight2", "burn", "burn2", "blur", "blur2", "flash", "flash2"]
+	html = "";
+	$.each(transitions, function (i, trans){
+		html += "<label>"+ trans + "<input type='checkbox' value='" + trans + "'><label>"
+	});
+	$("#transitions").html(html);
+
+	var animations = ["kenburns","kenburnsUp","kenburnsDown","kenburnsRight","kenburnsLeft","kenburnsUpLeft","kenburnsUpRight","kenburnsDownLeft","kenburnsDownRight","random"]
+	html = "";
+	$.each(animations, function (i, ani){
+		html += "<label>"+ ani + "<input type='checkbox' value='" + ani + "'><label>"
+	});
+	$("#animations").html(html);
+	
+
+	$( "#transitions :checkbox[value=fade]").prop("checked", true);	
+	$( "#settings-1 :checkbox[value=timer]").prop("checked", true);	
+});
+</script>
+</head>
+<body>
+<div id="settings-1">
+<label>Duration:<input type="text" id="delay" value="2000">ms</label><br>
+<label>Transition-Duration:<input type="text" id="tduration" value="1000">ms</label><br>
+<label>Animation-Duration:<input type="text" id="aduration" value="auto">ms</label><br>
+<label>Timer:<input type="checkbox" id="timer"></label>
+<p>Transitions:<div id="transitions"></div><br>
+<p>Animations:<div id="animations"></div><br>
+<button id="apply" action"#">Apply</button>
+<button id="prev" action"#">Prev</button>
+<button id="next" action"#">Next</button>
+</div>
+</body>
+</html>
