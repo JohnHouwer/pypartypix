@@ -29,12 +29,17 @@
 		transition-duration: 3s;
         	opacity: 1;
         }
+	#clearmarker {
+		position: absolute;
+		right: 20px;
+	}
   </style>
 
   <script>
 slides = [];
 rawfiles = [];
 filename = "index.txt";
+notshownyet = [];
 
 function addSlide(data){
 	 var lines = data.split("\n"); 
@@ -44,7 +49,7 @@ function addSlide(data){
 	 else {
 		 currentSlide = 0;
 	 }
-	 var inserted = 0
+	 var inserted = 0;
 	 $.each(lines, function (i, line){
 		 if (line != ""){
 			 if (line.toLowerCase().endsWith(".mp4")){
@@ -53,13 +58,31 @@ function addSlide(data){
 					slide = {"src": line, cover: false, color: "black"};
 				 }
 			 if (rawfiles.indexOf(line) === -1){
-				 slides.splice(currentSlide + 1 + inserted, 0, slide);
+				 position = currentSlide + inserted;
+				 if (notshownyet.length > 0){
+					 var max = Math.max.apply(null, notshownyet);
+					 position = max + 1;
+					 console.log("there are slides which are not shown yet", position, max);
+				 }
+
+				 slides.splice(position + 1, 0, slide);
 				 rawfiles.push(line);
 				 inserted += 1;
-				 console.log("slide added", slide, slides)
+				 console.log("slide added", slide, slides);
+			         notshownyet.push(position);
 			 }
 		 }
 	 });
+}
+
+function onSlideChange(index, slides){
+	console.log("currentIndex:", index);
+	position = notshownyet.indexOf(index);
+	if (position != -1){
+		console.log("Slide not shown yet slide must be removed", position, notshownyet)
+		notshownyet.splice(position, 1);
+	}
+	
 }
 
 function reloadSlides(){
@@ -73,7 +96,8 @@ function reloadSlides(){
 		}
 	}else{
 		if (slides.length > 0){
-			vegas = $("body").vegas({slides: slides});
+			vegas = $("body").vegas({slides: slides,
+						walk: onSlideChange});
 		}
 
 	}
@@ -109,10 +133,13 @@ $( document ).ready(function (){
 	});
 	$("#prev").on("click", function(){
 		vegas.vegas("previous");
-	})
+	});
 	$("#next").on("click", function(){
 		vegas.vegas("next");
-	})
+	});
+	$("#clearmarker").on("click", function(){
+		notshownyet = [];
+	});
         var transitions = ["fade", "fade2", "slideLeft", "slideLeft2", "slideRight", "slideRight2", "slideUp", "slideUp2", "slideDown", "slideDown2", "zoomIn", "zoomIn2", "zoomOut", "zoomOut2", "swirlLeft", "swirlLeft2", "swirlRight", "swirlRight2", "burn", "burn2", "blur", "blur2", "flash", "flash2"]
 	html = "";
 	$.each(transitions, function (i, trans){
@@ -138,12 +165,13 @@ $( document ).ready(function (){
 <label>Duration:<input type="text" id="delay" value="2000">ms</label><br>
 <label>Transition-Duration:<input type="text" id="tduration" value="1000">ms</label><br>
 <label>Animation-Duration:<input type="text" id="aduration" value="auto">ms</label><br>
-<label>Timer:<input type="checkbox" id="timer"></label>
+<label>Timer:<input type="checkbox" id="timer" title="displays a timer on the bottom of the screen"></label>
 <p>Transitions:<div id="transitions"></div><br>
 <p>Animations:<div id="animations"></div><br>
-<button id="apply" action"#">Apply</button>
-<button id="prev" action"#">Prev</button>
-<button id="next" action"#">Next</button>
+<button id="apply" title="Apply changes" action"#">Apply</button>
+<button id="prev" title="Go to the previous slide" action"#">Prev</button>
+<button id="next" title="Go to the next slide" action"#">Next</button>
+<button id="clearmarker" title="Clears the Array of not shown slides, the next uploaded slide will be shown immedate" action"#">Clear Marker</button>
 </div>
 </body>
 </html>
