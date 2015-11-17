@@ -114,7 +114,7 @@ button{bottom:2.5%;}
             fn = re.findall(
                 r'Content-Disposition.*name="picture"; filename="(.*)"',
                 line.decode("utf-8"))[0]
-            fn = fn.replace(" ", "_")
+            fn = fn.replace(" ", "_").replace("/", "_")
 
             if not fn:
                 return (False, "Can't find out file name...")
