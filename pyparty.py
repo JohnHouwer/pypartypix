@@ -63,7 +63,7 @@ button{bottom:2.5%;}
 <body>
 <form enctype="multipart/form-data" method="POST">
 <input name="picture" type="file" accept="image/*;capture=camera">
-<button type="submit">Bild posten</button>
+<button type="submit">Upload</button>
 </form>
 </body></html>
 """.encode("utf-8")
