@@ -1,45 +1,42 @@
 #!/usr/bin/python3
 
-import http.server
-import socketserver
-import sys
-import re
-import os
+import argparse
 import glob
+import http.server
+import os
+import re
+import socketserver
 import uuid
 
-# Default PORT
-PORT = 8000
+parser = argparse.ArgumentParser(description='Image Upload Server')
+parser.add_argument('-p', '--port', metavar='PORT', type=int,
+                    help='Port the server should listen to',
+                    default="8000", dest="port")
+parser.add_argument('-g', '--genuuid',  action='store_true', dest="genuuid",
+                    help='generate UUID used for authorization')
+parser.add_argument('-u', '--uuid', metavar="UUID", type=str, dest="uuid",
+                    help="use UUID")
+parser.add_argument('-d', '--directory', metavar="DIR", type=str,
+                    dest="directory", help="DIR used for image storage",
+                    default="images")
+parser.add_argument('-i', '--index', metavar="FILE", type=str, dest="index",
+                    help="File used for index storage. "
+                    + "The slideshow needs to read this file.",
+                    default="index.txt")
 
-if "--port" in sys.argv:
-    try:
-        PORT = int(sys.argv[sys.argv.index("--port") + 1])
-    except:
-        print("Argument after --port is not valid")
-        exit(255)
+args = parser.parse_args()
 
-if "--genuuid" in sys.argv:
-    rstr = str(uuid.uuid4())
-if "--uuid" in sys.argv:
-    rstr = sys.argv[sys.argv.index("--uuid") + 1]
-if "--help" in sys.argv:
-    print("""This software is under the MIT license.
-    ./pyparty.py [--uuid <uuid>] [--genuuid] [--port <port>] [--help] \n
-    --genuuid  # generates a new uuid
-    --uuid <string> # gives a fixed uuid
-    if no neither genuuid nor uuid is given, uuid check will be disabled
-    --port <portnum> # controls the serverport
-    --help # displays this help""")
-    exit(0)
+if args.genuuid:
+    rstr = uuid.uuid4()
 
-indexfile = "index.txt"
-directory = "images"
+if args.uuid:
+    rstr = args.uuid
 
 try:
     print("UUID is:", rstr)
 except:
-    rstr = ""
     print("NO UUID is set, Clients don't need a secret uri")
+    rstr = ""
 
 
 class CameraHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -127,13 +124,13 @@ button{bottom:2.5%;}
 
             # Write File
             if re.search("\.((jpe?g)|(png)|(gif))", fn.lower()) is not None:
-                if os.path.isfile(directory + fn):
+                if os.path.isfile(args.directory + fn):
                     fn = "{}_{}".format(str(time.time()), fn)
-                fnpath = "{}/{}".format(directory, fn)
+                fnpath = "{}/{}".format(args.directory, fn)
                 with open(fnpath, 'wb') as f:
                     f.write(post_body)
 
-                with open(indexfile, "a") as idx:
+                with open(args.index, "a") as idx:
                     idx.write(fnpath + "\n")
             else:
                 print("WRONG FILE TYPE")
@@ -145,21 +142,21 @@ button{bottom:2.5%;}
         else:
             self.denied()
 
-httpd = socketserver.TCPServer(("", PORT), CameraHTTPRequestHandler)
+httpd = socketserver.TCPServer(("", args.port), CameraHTTPRequestHandler)
 
 try:
-    os.mkdir(directory)
+    os.mkdir(args.directory)
 except:
-    print("Dir: '{}' already exists".format(directory))
+    print("Dir: '{}' already exists".format(args.directory))
 
-print("Create Index from file in '{}'".format(directory))
-with open(indexfile, "w") as idx:
-    for f in glob.glob(directory + "/*"):
+print("Create Index from file in '{}'".format(args.directory))
+with open(args.index, "w") as idx:
+    for f in glob.glob(args.directory + "/*"):
         idx.write(f + "\n")
 
-print("serving at port", PORT)
+print("serving at port", args.port)
 
 print("\n", "Clients can use the following URL to post pictures:\n\n",
       "http://{}:{}/{}".format(http.server.socket.gethostname(),
-                               PORT, rstr), "\n" * 3)
+                               args.port, rstr), "\n" * 3)
 httpd.serve_forever()
