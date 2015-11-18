@@ -20,9 +20,18 @@ parser.add_argument('-d', '--directory', metavar="DIR", type=str,
                     dest="directory", help="DIR used for image storage",
                     default="images")
 parser.add_argument('-i', '--index', metavar="FILE", type=str, dest="index",
-                    help="File used for index storage. "
-                    + "The slideshow needs to read this file.",
+                    help="File used for index storage"
+                    + "The slideshow needs to read this file",
                     default="index.txt")
+parser.add_argument('-q', '--qrcode', metavar="FILE", type=str,
+                    dest="qrcode", const="pyparty_server_url_qr",
+                    nargs='?', help="File used for qrcode storage")
+parser.add_argument('-s', '--qrscale', metavar="SCALE", type=int,
+                    dest="qrscale", default=8,
+                    help="Scale used for qrcode")
+parser.add_argument('-H', '--host', metavar="HOST", type=str,
+                    dest="host", default=http.server.socket.gethostname(),
+                    help="Scale used for qrcode")
 
 args = parser.parse_args()
 
@@ -156,7 +165,23 @@ with open(args.index, "w") as idx:
 
 print("serving at port", args.port)
 
+server_url = "http://{}:{}/{}".format(args.host, args.port, rstr)
+
 print("\n", "Clients can use the following URL to post pictures:\n\n",
-      "http://{}:{}/{}".format(http.server.socket.gethostname(),
-                               args.port, rstr), "\n" * 3)
+      server_url, "\n" * 3)
+
+if args.qrcode:
+    try:
+        import pyqrcode
+        server_url_qr = pyqrcode.create(server_url, error='H')
+        print(server_url_qr.terminal(module_color='black', background='white',
+              quiet_zone=1))
+        server_url_qr.svg(args.qrcode + ".svg", scale=args.qrscale)
+        server_url_qr.png(args.qrcode + ".png", scale=args.qrscale,
+                          module_color=[0, 0, 0, 255],
+                          background=[0xff, 0xff, 0xff])
+    except Exception as e:
+        print("Could not import 'pyqrcode' it can be installed with 'pip3",
+              "install pyqrcode' and 'pip3 install pypng'")
+
 httpd.serve_forever()
