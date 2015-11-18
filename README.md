@@ -12,8 +12,29 @@ This service runs unencrypted because a self signed certificate whould be a pain
 As a security measure this server should run in a chroot or otherwide unprivileged environment.
 
 This was meant as a poc to demonstrate that client for such an app is not necessary.
+```
+% ./pyparty.py -h
+usage: pyparty.py [-h] [-p PORT] [-g] [-u UUID] [-d DIR] [-i FILE] [-q [FILE]]
+                  [-s SCALE] [-H HOST]
 
-The option --help displays a help.
+Image Upload Server
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PORT, --port PORT  Port the server should listen to
+  -g, --genuuid         Generate UUID used for authorization
+  -u UUID, --uuid UUID  use UUID
+  -d DIR, --directory DIR
+                        DIR used for image storage
+  -i FILE, --index FILE
+                        File used for index storage. The slideshow needs to
+                        read this file
+  -q [FILE], --qrcode [FILE]
+                        File used for qrcode storage
+  -s SCALE, --qrscale SCALE
+                        Scale used for qrcode
+  -H HOST, --host HOST  Hostname used for URL/QRCODE
+```
 
 LICENSE:
 MIT
