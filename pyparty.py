@@ -13,14 +13,14 @@ parser.add_argument('-p', '--port', metavar='PORT', type=int,
                     help='Port the server should listen to',
                     default="8000", dest="port")
 parser.add_argument('-g', '--genuuid',  action='store_true', dest="genuuid",
-                    help='generate UUID used for authorization')
+                    help='Generate UUID used for authorization')
 parser.add_argument('-u', '--uuid', metavar="UUID", type=str, dest="uuid",
                     help="use UUID")
 parser.add_argument('-d', '--directory', metavar="DIR", type=str,
                     dest="directory", help="DIR used for image storage",
                     default="images")
 parser.add_argument('-i', '--index', metavar="FILE", type=str, dest="index",
-                    help="File used for index storage"
+                    help="File used for index storage. "
                     + "The slideshow needs to read this file",
                     default="index.txt")
 parser.add_argument('-q', '--qrcode', metavar="FILE", type=str,
@@ -31,7 +31,7 @@ parser.add_argument('-s', '--qrscale', metavar="SCALE", type=int,
                     help="Scale used for qrcode")
 parser.add_argument('-H', '--host', metavar="HOST", type=str,
                     dest="host", default=http.server.socket.gethostname(),
-                    help="Scale used for qrcode")
+                    help="Hostname used for URL/QRCODE")
 
 args = parser.parse_args()
 
@@ -158,7 +158,7 @@ try:
 except:
     print("Dir: '{}' already exists".format(args.directory))
 
-print("Create Index from file in '{}'".format(args.directory))
+print("Create index from file in '{}'".format(args.directory))
 with open(args.index, "w") as idx:
     for f in glob.glob(args.directory + "/*"):
         idx.write(f + "\n")
@@ -181,7 +181,11 @@ if args.qrcode:
                           module_color=[0, 0, 0, 255],
                           background=[0xff, 0xff, 0xff])
     except Exception as e:
-        print("Could not import 'pyqrcode' it can be installed with 'pip3",
-              "install pyqrcode' and 'pip3 install pypng'")
+        print("Could not import/use 'pyqrcode' it can be installed with",
+              "\n 'pip3 install pyqrcode' \nand  \n 'pip3 install pypng'\n")
 
-httpd.serve_forever()
+print("Exit server with ctrl + c")
+try:
+    httpd.serve_forever()
+except KeyboardInterrupt as e:
+    exit(0)
