@@ -22,9 +22,11 @@ This was meant as a poc to demonstrate that client for such an app is not necess
 =====
 Usage
 =====
-% ./pyparty.py -h
-usage: pyparty.py [-h] [-p PORT] [-g] [-u UUID] [-d DIR] [-i FILE] [-q [FILE]]
-                  [-s SCALE] [-H HOST]
+% python3 -m pypartypix -h
+or
+% ./pyparty -h 
+usage: pyparty [-h] [-p PORT] [-g] [-u UUID] [-d DIR] [-i FILE] [-q [FILE]]
+               [-s SCALE] [-H HOST] [-r] [-w]
 
 Image Upload Server
 
@@ -43,6 +45,8 @@ optional arguments:
   -s SCALE, --qrscale SCALE
                         Scale used for qrcode
   -H HOST, --host HOST  Hostname used for URL/QRCODE
+  -r, --run             Don't start the server
+  -w, --web             Autostart Webbrowser
 
 ========
 LICENSE:

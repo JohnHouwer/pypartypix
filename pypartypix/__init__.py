@@ -8,7 +8,6 @@ import re
 import socketserver
 import uuid
 import time
-#import pyparty
 import pkg_resources
 import webbrowser
 
@@ -51,6 +50,9 @@ if True:
     parser.add_argument('-r', '--run', action='store_true',
                         dest="run", 
                         help="Don't start the server")
+    parser.add_argument('-w', '--web', action='store_true',
+                        dest="web", 
+                        help="Autostart Webbrowser")
 
     args = parser.parse_args()
 
@@ -209,8 +211,9 @@ if True:
         except Exception as e:
             print("Could not import/use 'pyqrcode' it can be installed with",
                   "\n 'pip3 install pyqrcode' \nand  \n 'pip3 install pypng'\n")
-    print("starting webbrowser")
-    webbrowser.open("slideshow.html")
+    if args.web:
+        print("starting webbrowser")
+        webbrowser.open("slideshow.html")
     print("Exit server with ctrl + c")
     try:
         if not args.run:
