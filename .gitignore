@@ -3,3 +3,5 @@ images/*
 index.txt
 build
 dist
+pypartypix.egg-info
+*.swp
