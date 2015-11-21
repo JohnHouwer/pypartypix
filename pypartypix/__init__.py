@@ -8,13 +8,21 @@ import re
 import socketserver
 import uuid
 import time
-import pyparty
+#import pyparty
 import pkg_resources
+import webbrowser
 
-print(pkg_resources.resource_listdir('pyparty', ''))
+# print(pkg_resources.resource_listdir('pyparty', ''))
 
+def drop_resource(name=""):
+    for n in name:
+        print(n)
+        s = pkg_resources.resource_string('pypartypix', n)
+        with open(n, 'wb') as f:
+            f.write(s)
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
+if True:
 
     parser = argparse.ArgumentParser(description='Image Upload Server')
     parser.add_argument('-p', '--port', metavar='PORT', type=int,
@@ -144,14 +152,13 @@ if __name__ == '__main__':
 
                 # Write File
                 if re.search("\.((jpe?g)|(png)|(gif))", fn.lower()) is not None:
-                    if os.path.isfile(args.directory + fn):
+                    if os.path.isfile(fn):
                         fn = "{}_{}".format(str(time.time()), fn)
-                    fnpath = "{}/{}".format(args.directory, fn)
-                    with open(fnpath, 'wb') as f:
+                    with open(fn, 'wb') as f:
                         f.write(post_body)
 
                     with open(args.index, "a") as idx:
-                        idx.write(fnpath + "\n")
+                        idx.write(fn + "\n")
                 else:
                     print("WRONG FILE TYPE")
                 self.accept()
@@ -168,12 +175,20 @@ if __name__ == '__main__':
         os.mkdir(args.directory)
     except:
         print("Dir: '{}' already exists".format(args.directory))
+    try:
+        os.mkdir(args.directory + "/vegas")
+    except:
+        pass
+    os.chdir(args.directory)
 
     print("Create index from file in '{}'".format(args.directory))
+    
     with open(args.index, "w") as idx:
-        for f in glob.glob(args.directory + "/*"):
-            idx.write(f + "\n")
+        for f in glob.glob("*"):
+            if re.search("\.((jpe?g)|(png)|(gif))", f.lower()) is not None:
+                idx.write(f + "\n")
 
+    drop_resource( name=[ 'vegas/vegas.js', 'vegas/vegas.css', 'slideshow.html', 'jquery-latest.min.js', ],) 
     print("serving at port", args.port)
 
     server_url = "http://{}:{}/{}".format(args.host, args.port, rstr)
@@ -194,7 +209,8 @@ if __name__ == '__main__':
         except Exception as e:
             print("Could not import/use 'pyqrcode' it can be installed with",
                   "\n 'pip3 install pyqrcode' \nand  \n 'pip3 install pypng'\n")
-
+    print("starting webbrowser")
+    webbrowser.open("slideshow.html")
     print("Exit server with ctrl + c")
     try:
         if not args.run:

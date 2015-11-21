@@ -33,7 +33,7 @@ setup(
 
     # Author details
     author='John Houwer',
-    author_email='johnhouwer@gmail.com',
+    author_email='john.houwer@gmail.com',
 
     # Choose your license
     license='MIT',
@@ -78,8 +78,8 @@ setup(
     # simple. Or you can use find_packages().
     #packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     #packages=find_packages(),
-    packages=['pyparty'],
-    scripts=["pyparty.py"],
+    packages=['pypartypix'],
+    #scripts=["pyparts/pyparty.py"],
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -96,15 +96,15 @@ setup(
     # for example:
     # $ pip install -e .[dev,test]
     extras_require={
-        'qrcode': ['pyqrcode'],
-        'png': ['pypng'],
+        'qrcode': ['pyqrcode', 'pypng'],
     },
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-        'pyparty': ['vegas/vegas.js', 'jquery-latest.min.js',
+        'pypartypix': ['vegas/vegas.js', 'vegas/vegas.css',
+            'jquery-latest.min.js',
             'slideshow.html'],
     },
 
@@ -117,9 +117,9 @@ setup(
     # To provide executable scripts, use entry points in preference to the
     # "scripts" keyword. Entry points provide cross-platform support and allow
     # pip to create the appropriate form of executable for the target platform.
-    #entry_points={
-    #    'console_scripts': [
-    #        'sample=sample:main',
-    #    ],
-    #},
+    entry_points={
+        'console_scripts': [
+            'pyparty=pypartypix',
+        ],
+    },
 )
