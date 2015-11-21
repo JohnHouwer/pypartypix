@@ -1,4 +1,10 @@
-# pypartypix
+pypartypix a picture upload server for html slideshows 
+======================================================
+Allows guests to upload pictures through a simple webinterface.
+The picture is inserted as the next slide in the slideshow.
+
+----
+
 Html slideshow that allows new pictures to be inserted from guests through a webclient.
 pypartypix is a simple python (3) server which allows clients to upload images through a simple web interface.
 The slideshow.html file can be startet local and will display all images in the index.txt file.
@@ -12,7 +18,10 @@ This service runs unencrypted because a self signed certificate whould be a pain
 As a security measure this server should run in a chroot or otherwide unprivileged environment.
 
 This was meant as a poc to demonstrate that client for such an app is not necessary.
-```
+
+=====
+Usage
+=====
 % ./pyparty.py -h
 usage: pyparty.py [-h] [-p PORT] [-g] [-u UUID] [-d DIR] [-i FILE] [-q [FILE]]
                   [-s SCALE] [-H HOST]
@@ -34,13 +43,19 @@ optional arguments:
   -s SCALE, --qrscale SCALE
                         Scale used for qrcode
   -H HOST, --host HOST  Hostname used for URL/QRCODE
-```
 
+========
 LICENSE:
+========
 MIT
 
+========
 CREDITS:
-Thanks to the developer of Party Pix! for the idea, the client is Android only and the server is Java and seems to be closed source.
+========
+Thanks to the developer of Party Pix! for the idea, hist client is Android only and the server is Java and seems to be closed source.
+
+Python:
+https://python.org
 
 Vegas:
 http://vegas.jaysalvat.com/
