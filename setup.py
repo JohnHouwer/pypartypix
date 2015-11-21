@@ -54,7 +54,7 @@ setup(
        
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
-        'Operating System :: MacOS'
+        'Operating System :: MacOS',
 
         # Pick your license as you wish (should match "license" above)
         'License :: OSI Approved :: MIT License',
@@ -78,6 +78,7 @@ setup(
     # simple. Or you can use find_packages().
     #packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     packages=find_packages(),
+    scripts=["pyparty.py"],
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -102,7 +103,7 @@ setup(
     # installed, specify them here.  If using Python 2.6 or less, then these
     # have to be included in MANIFEST.in as well.
     package_data={
-        'data': ['vegas.html', 'jquery-latest.min.js'],
+        'data': ['vegas.js', 'jquery-latest.min.js'],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
