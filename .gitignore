@@ -1,7 +1,7 @@
-images
-images/*
-index.txt
+**/*.pyc
+**/*.swp
 build
 dist
+images
+index.txt
 pypartypix.egg-info
-*.swp
