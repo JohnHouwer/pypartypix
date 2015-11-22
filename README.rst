@@ -19,9 +19,10 @@ As a security measure this server should run in a chroot or otherwide unprivileg
 
 This was meant as a poc to demonstrate that client for such an app is not necessary.
 
-=====
+
 Usage
-=====
+-----
+
 % python3 -m pypartypix -h
 or
 % ./pyparty -h 
@@ -48,14 +49,14 @@ optional arguments:
   -r, --run             Don't start the server
   -w, --web             Autostart Webbrowser
 
-========
-LICENSE:
-========
+
+LICENSE
+-------
 MIT
 
-========
-CREDITS:
-========
+
+CREDITS
+-------
 Thanks to the developer of Party Pix! for the idea, hist client is Android only and the server is Java and seems to be closed source.
 
 Python:
