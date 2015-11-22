@@ -68,7 +68,7 @@ except:
 class CameraHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     html = """
 <!doctype html>
-<html><head><title>Python Fast Picture Uploader</title>
+<html><head><title>Pypartypix: Fast Picture Upload</title>
 <style>
 input, button{
  background: lightsteelblue;
