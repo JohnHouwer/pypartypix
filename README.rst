@@ -26,8 +26,8 @@ Usage
 % python3 -m pypartypix -h
 or
 % ./pyparty -h 
-usage: pyparty [-h] [-p PORT] [-g] [-u UUID] [-d DIR] [-i FILE] [-q [FILE]]
-               [-s SCALE] [-H HOST] [-r] [-w]
+usage: -m [-h] [-p PORT] [-g] [-u UUID] [-d DIR] [-i FILE] [-q [FILE]]
+          [-s SCALE] [-H HOST] [-r] [-w] [-o]
 
 Image Upload Server
 
@@ -48,7 +48,7 @@ optional arguments:
   -H HOST, --host HOST  Hostname used for URL/QRCODE
   -r, --run             Don't start the server
   -w, --web             Autostart Webbrowser
-
+  -o, --open-qr         Open code in Webbrowser
 
 LICENSE
 -------

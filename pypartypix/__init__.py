@@ -11,6 +11,7 @@ import socketserver
 import time
 import uuid
 import webbrowser
+import platform
 
 
 def drop_resource(name=""):
@@ -49,6 +50,9 @@ parser.add_argument('-r', '--run', action='store_true',
 parser.add_argument('-w', '--web', action='store_true',
                     dest="web",
                     help="Autostart Webbrowser")
+parser.add_argument('-o', '--open-qr', action='store_true',
+                    dest="open_qr",
+                    help="Open code in Webbrowser")
 
 args = parser.parse_args()
 
@@ -193,12 +197,15 @@ if args.qrcode:
     try:
         import pyqrcode
         server_url_qr = pyqrcode.create(server_url, error='H')
-        print(server_url_qr.terminal(module_color='black', background='white',
-              quiet_zone=1))
+        if platform.system().lower() == "linux":
+            print(server_url_qr.terminal(module_color='black',
+                  background='white', quiet_zone=1))
         server_url_qr.svg(args.qrcode + ".svg", scale=args.qrscale)
         server_url_qr.png(args.qrcode + ".png", scale=args.qrscale,
                           module_color=[0, 0, 0, 255],
                           background=[0xff, 0xff, 0xff])
+        if args.open_qr:
+            webbrowser.open(args.qrcode + ".png")
     except Exception as e:
         print("Could not import/use 'pyqrcode' it can be installed with",
               "\n 'pip3 install pyqrcode' \nand  \n 'pip3 install pypng'\n")
